@@ -98,11 +98,14 @@
 ;;; robust than #\Bel -- some implementations might eg. call it #\Bell, which
 ;;; is unicode character in eg. SBCL.
 (defconstant +terminal-bell+ (code-char 7))
+(defvar *silent* nil
+  "Should beep beep?")
 
 (defmethod beep ((b terminal))
   (declare (ignore b))
-  (and (write-char +terminal-bell+ *error-output*)
-       (force-output *error-output*)))
+  (unless *silent*
+    (and (write-char +terminal-bell+ *error-output*)
+         (force-output *error-output*))))
 
 (defmethod page ((backend terminal))
   (write-string "--more--")
